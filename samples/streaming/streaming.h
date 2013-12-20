@@ -5,6 +5,7 @@
 #ifndef STREAMING_H
 #define STREAMING_H
 
+#include <twitchsdk.h>
 #include <string>
 
 /**
@@ -33,7 +34,7 @@ enum StreamState
 #undef STREAM_STATE
 
 void InitializeStreaming(const std::string& username, const std::string& password, const std::string& clientId, const std::string& clientSecret, const std::wstring& dllLoadPath);
-void StartStreaming(unsigned int outputWidth, unsigned int outputHeight, unsigned int targetFps);
+void StartStreaming(unsigned int outputWidth, unsigned int outputHeight, unsigned int targetFps, TTV_PixelFormat pixelFormat);
 const std::string& GetUsername();
 unsigned char* GetNextFreeBuffer();
 void SubmitFrame(unsigned char* pBgraFrame);

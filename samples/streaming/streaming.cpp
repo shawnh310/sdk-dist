@@ -231,7 +231,7 @@ void InitializeStreaming(const std::string& username, const std::string& passwor
  * can be called which will initiate streaming.  Once streaming begins, the app must call SubmitFrame() to submit frames
  * to the stream.
  */
-void StartStreaming(unsigned int outputWidth, unsigned int outputHeight, unsigned int targetFps)
+void StartStreaming(unsigned int outputWidth, unsigned int outputHeight, unsigned int targetFps, TTV_PixelFormat pixelFormat = TTV_PF_BGRA )
 {
 	switch (gStreamState)
 	{
@@ -264,7 +264,7 @@ void StartStreaming(unsigned int outputWidth, unsigned int outputHeight, unsigne
 
 	// Compute the rest of the fields based on the given parameters
 	TTV_GetDefaultParams(&videoParams);
-	videoParams.pixelFormat = TTV_PF_BGRA;
+	videoParams.pixelFormat = pixelFormat;
 
 	// Setup the audio parameters
 	TTV_AudioParams audioParams;
