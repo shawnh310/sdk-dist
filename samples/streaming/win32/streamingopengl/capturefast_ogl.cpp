@@ -22,7 +22,7 @@ static GLuint gSceneTexture = 0;
 static GLuint gDepthBuffer = 0;
 
 static GLuint gCapturePBO[NUM_CAPTURE_SURFACES] = { 0, 0, 0, 0 };
-static GLsync gCaptureSync[NUM_CAPTURE_SURFACES] = { nullptr, nullptr, nullptr, nullptr };
+static GLsync gCaptureSync[NUM_CAPTURE_SURFACES] = { 0, 0, 0, 0};
 
 static GLuint gResizeFBO = 0;
 static GLuint gResizeTexture = 0;
@@ -141,10 +141,10 @@ void DeinitRendering_Fast()
 
 	for ( int i = 0; i < NUM_CAPTURE_SURFACES; i++)
 	{
-		if ( gCaptureSync[i] != nullptr )
+		if ( gCaptureSync[i] != 0 )
 		{
 			glDeleteSync( gCaptureSync[i] );
-			gCaptureSync[i] = nullptr;
+			gCaptureSync[i] = 0;
 		}
 	}
 }
@@ -401,7 +401,7 @@ static void CaptureFrame( int captureWidth, int captureHeight )
 
 	// insert a sync
 	{
-		if ( gCaptureSync[idx] != nullptr )
+		if ( gCaptureSync[idx] != 0 )
 			glDeleteSync(gCaptureSync[idx]);
 
 		gCaptureSync[idx] = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
@@ -420,8 +420,7 @@ static bool ReadCapturePBO(int captureWidth, int captureHeight, unsigned char*& 
 	int idx = gCaptureGet % NUM_CAPTURE_SURFACES;
 
 	if ( gCaptureGet == gCapturePut || 
-		 gCaptureSync[idx] == nullptr || 
-		 glClientWaitSync(gCaptureSync[idx], 0, 0) ==  GL_TIMEOUT_EXPIRED )
+		 (gCaptureSync[idx] != 0 && glClientWaitSync(gCaptureSync[idx], 0, 0) ==  GL_TIMEOUT_EXPIRED) )
 	{
 		return false;
 	}
